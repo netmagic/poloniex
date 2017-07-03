@@ -7,9 +7,9 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/autobahnjs/0.11.2/autobahn.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone.min.js"></script>
@@ -81,6 +81,10 @@
       .table-bordered td, .table-bordered th{
         border-color: black !important;
       }
+      .border {
+        border: 1px solid #9d9d9d !important;
+        padding: 2px;
+      }
     </style>
   </head>
   <script type="text/javascript">
@@ -120,6 +124,12 @@
                       coinoneTable.onChangeOrder(this.value);
                   });
 
+                  $("input[name=time]").change(function() {
+                      btcTable.onChangeLength(this.value);
+                      usdTable.onChangeLength(this.value);
+                      coinoneTable.onChangeLength(this.value);
+                  });
+
                   setInterval(function() {
                       var value = $('input[name="sort"]:checked').val();
                       btcTable.onChangeOrder(value);
@@ -132,7 +142,7 @@
   <body onload="load()">
   <br/>
   <div class="container-fluid">
-    <div>
+    <div class="border" style="display:inline-block;">
       <label><input type="radio" name="sort" value="0" checked>None</label>
       <label><input type="radio" name="sort" value="1">Up</label>
       <label><input type="radio" name="sort" value="2">Same</label>
@@ -140,6 +150,12 @@
       <label><input type="radio" name="sort" value="4">Day Change</label>
       <label><input type="radio" name="sort" value="5">Volume</label>
     </div>
+    <!--<div class="border" style="display:inline-block;">
+      <label><input type="radio" name="time" value="5">5</label>
+      <label><input type="radio" name="time" value="10">10</label>
+      <label><input type="radio" name="time" value="30">30</label>
+      <label><input type="radio" name="time" value="60" checked>60</label>
+    </div>-->
     <div>
       <table class="table table-condensed table-bordered table-striped font12">
         <tr>
