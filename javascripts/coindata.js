@@ -29,5 +29,13 @@ define(["js/coinitem"],
             return item;
         };
 
+        CoinData.prototype.refreshCharts = function(time) {
+            if(time == null) time = 60;
+            for(var key in this.data) {
+                var item = this.data[key];
+                item.refreshChart(time);
+            }
+        };
+
         return CoinData;
     });
