@@ -7,6 +7,7 @@ define([],
 
             this.obj = null;
             this.chart = null;
+            this.time = 60;
             this.history = [];
         };
 
@@ -45,7 +46,9 @@ define([],
             return this.obj;
         };
 
-        CoinItem.prototype.update = function () {
+        CoinItem.prototype.update = function (time) {
+            if(time == null) time = 60;
+
             var price = this.last_price.toFixed(8);
             if(parseInt(this.last_price) == price) {
                 price = parseInt(price);
@@ -61,7 +64,7 @@ define([],
             this.obj.find("tr:eq(2)").find("td:eq(1)").text(day_change + "% / " + volume);
             if(this.name == "USDT_BTC") $("#USDT_BTC").text("USDT_BTC : " + price.toLocaleString());
             if(this.name == "USDT_ETH") $("#USDT_ETH").text("USDT_ETH : " + price.toLocaleString());
-            this.updateChart();
+            this.updateChart(time);
         };
 
         CoinItem.prototype.generateChart = function () {
@@ -166,7 +169,7 @@ define([],
             high: [null, 0]
         };
 
-        CoinItem.prototype.updateChart = function () {
+        CoinItem.prototype.updateChart = function (time) {
             if (this.chart == null) {
                 return;
             }
@@ -175,6 +178,7 @@ define([],
 
             if (this.history.length > 0) {
                 if (this.history.length > 60 * 1) {
+                    this.chart.series[0].removePoint(0);
                     this.history.shift();
                 }
 
@@ -232,6 +236,15 @@ define([],
                         table.removeClass("blink-down");
                     }, 1000);
                 }
+            }
+        };
+
+        CoinItem.prototype.refreshChart = function(time) {
+            if(this.time != time) {
+                this.time = time;
+                if(this.time > this.history.length) time = this.history.length - 1;
+                this.chart.series[0].setData(this.history.slice(60 - time));
+                this.chart.redraw();
             }
         };
 
