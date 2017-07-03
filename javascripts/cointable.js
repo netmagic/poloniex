@@ -56,6 +56,10 @@ define(["js/coindata"],
             this.tableOBJ.append(list);
         };
 
+        CoinTable.prototype.onChangeLength = function (time) {
+            this.coinData.refreshCharts(time);
+        };
+
         CoinTable.prototype.update = function (item) {
             var that = this;
             var updated = false;
