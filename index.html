@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/autobahnjs/0.11.2/autobahn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.3/require.min.js"></script>
+
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <style type="text/css">
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 5px;
+        font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+      }
+
+      #container {
+        width: 100%;
+      }
+
+      .table-condensed{
+        font-size: 11px;
+        font-weight: bold;
+      }
+
+      #marketTable {
+        width : 200px;
+      }
+
+      .chartDiv {
+        width: 180px;
+        height: 100px;
+      }
+
+      .blink-up {
+        background-color: #a3ffaa;
+      }
+
+      .blink-down {
+        background-color: #ff8b8d;
+      }
+
+      #tableView {
+        display: inline-block;
+      }
+
+      .div_item {
+        display: inline-block;
+        padding: 5px;
+      }
+
+      .item_name {
+        width: 80px;
+      }
+
+      .favorite {
+        background-color: #dadada;
+      }
+
+      .font12 {
+        font-size : 12px;
+      }
+
+      .table {
+        text-align: center;
+        margin-bottom: 0;
+      }
+      .table-bordered td, .table-bordered th{
+        border-color: black !important;
+      }
+    </style>
+  </head>
+  <script type="text/javascript">
+
+      function load() {
+          requirejs.config({
+              paths: {
+                  "js": "javascripts"
+              }
+          });
+
+          require(
+              [],
+              function () {
+                  main();
+              }
+          );
+      }
+
+      function main() {
+          require(["js/poloniex", "js/coindata", "js/cointable", "js/coinone"],
+              function (Poloniex, CoinData, CoinTable, CoinOne) {
+                  var btcTable = new CoinTable($("#poloniexBTC"));
+                  var usdTable = new CoinTable($("#poloniexUSD"));
+                  var poloniex = new Poloniex();
+                  poloniex.addCoinTable("BTC", btcTable);
+                  poloniex.addCoinTable("USDT", usdTable);
+                  poloniex.connect();
+
+                  var coinoneTable = new CoinTable($("#coinone"));
+                  var coinOne = new CoinOne(coinoneTable);
+                  coinOne.connect();
+
+                  $("input[name=sort]").change(function() {
+                      btcTable.onChangeOrder(this.value);
+                      usdTable.onChangeOrder(this.value);
+                      coinoneTable.onChangeOrder(this.value);
+                  });
+
+                  setInterval(function() {
+                      var value = $('input[name="sort"]:checked').val();
+                      btcTable.onChangeOrder(value);
+                      usdTable.onChangeOrder(value);
+                      coinoneTable.onChangeOrder(value);
+                  }, 1000);
+              });
+      }
+  </script>
+  <body onload="load()">
+  <br/>
+  <div class="container-fluid">
+    <div>
+      <label><input type="radio" name="sort" value="0" checked>None</label>
+      <label><input type="radio" name="sort" value="1">Up</label>
+      <label><input type="radio" name="sort" value="2">Same</label>
+      <label><input type="radio" name="sort" value="3">Down</label>
+      <label><input type="radio" name="sort" value="4">Day Change</label>
+      <label><input type="radio" name="sort" value="5">Volume</label>
+    </div>
+    <div>
+      <table class="table table-condensed table-bordered table-striped font12">
+        <tr>
+          <td style="width:25%"><div id="USDT_BTC"></div></td>
+          <td style="width:25%"><div id="USDT_ETH"></div></td>
+          <td style="width:25%"><div id="COINONE_BTC"></div></td>
+          <td style="width:25%"><div id="COINONE_ETH"></div></td>
+        </tr>
+      </table>
+    </div>
+    <br />
+    CoinOne
+    <div id="coinone">
+
+    </div>
+    <br />
+    Poloniex BTC
+    <div id="poloniexBTC">
+
+    </div>
+    <br />
+    Poloniex USDT
+    <div id="poloniexUSD">
+
+    </div>
+  </div>
+  </body>
+</html>
